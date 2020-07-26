@@ -43,4 +43,33 @@ var app = {
     }
 };
 
+var postForm = $( '#post-form' );
+var jsonData = function( form ) {
+var arrData = form.serializeArray(),
+objData = {};
+$.each( arrData, function( index, element ) {
+objData[element.name] = element.value;
+});
+return JSON.stringify( objData );
+};
+postForm.on( 'submit', function( e ) {
+e.preventDefault();
+$.ajax({
+url: 'http://queenzee.myartsonline.com/wp-json/wp/v2/posts',
+method: 'POST',
+data: jsonData( postForm ),
+crossDomain: true,
+contentType: 'application/json',
+beforeSend: function ( xhr ) {
+xhr.setRequestHeader( 'Authorization', "Bearer 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9xdWVlbnplZS5teWFydHNvbmxpbmUuY29tIiwiaWF0IjoxNTgwMjE0OTQ2LCJuYmYiOjE1ODAyMTQ5NDYsImV4cCI6MTU4MDgxOTc0NiwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMiJ9fX0.KyqBO2HhMIkc3xFHf2oGwCaPZzrCGMJ_5LLWoi4gSXc'");
+},
+success: function( data ) {
+console.log( data );
+},
+error: function( error ) {
+console.log( error );
+}
+});
+});
+
 app.initialize();
